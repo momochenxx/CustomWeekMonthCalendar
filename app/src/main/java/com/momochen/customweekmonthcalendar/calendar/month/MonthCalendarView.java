@@ -12,7 +12,7 @@ import com.momochen.customweekmonthcalendar.calendar.OnCalendarClickListener;
 import java.util.Calendar;
 
 /**
- * Created by Jimmy on 2016/10/6 0006.
+ * Created by momochen on 2017/7/4.
  */
 public class MonthCalendarView extends ViewPager implements OnMonthClickListener {
 

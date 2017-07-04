@@ -13,7 +13,7 @@ import com.momochen.customweekmonthcalendar.R;
 import org.joda.time.DateTime;
 
 /**
- * Created by Jimmy on 2016/10/6 0006.
+ * Created by momochen on 2017/7/4.
  */
 public class MonthAdapter extends PagerAdapter {
 

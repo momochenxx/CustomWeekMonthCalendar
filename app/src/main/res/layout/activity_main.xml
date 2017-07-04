@@ -13,17 +13,77 @@
         android:background="@color/calendar_bg_color"
         app:week_text_size="@integer/calendar_text_size" />
 
-    <com.momochen.customweekmonthcalendar.calendar.month.MonthCalendarView
-        android:id="@+id/mcvCalendar"
+    <com.momochen.customweekmonthcalendar.calendar.schedule.ScheduleLayout
+        android:id="@+id/slSchedule"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/month_calendar_height"
-        android:background="@color/calendar_bg_color"
-        android:overScrollMode="never"
-        app:month_day_text_size="@integer/calendar_text_size"
-        app:month_holiday_color="@color/holiday_text_color"
-        app:month_selected_circle_color="@color/select_circle_color"
-        app:month_show_holiday_hint="true"
-        app:month_show_lunar="true"
-        app:month_show_task_hint="true" />
+        android:layout_height="match_parent"
+        app:auto_change_month_row="false"
+        app:default_view="month">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rlMonthCalendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.momochen.customweekmonthcalendar.calendar.month.MonthCalendarView
+                        android:id="@+id/mcvCalendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/month_calendar_height"
+                        android:background="@color/calendar_bg_color"
+                        android:overScrollMode="never"
+                        app:month_day_text_size="@integer/calendar_text_size"
+                        app:month_holiday_color="@color/holiday_text_color"
+                        app:month_selected_circle_color="@color/select_circle_color"
+                        app:month_show_holiday_hint="true"
+                        app:month_show_lunar="true"
+                        app:month_show_task_hint="true" />
+                </RelativeLayout>
+
+                <com.momochen.customweekmonthcalendar.calendar.week.WeekCalendarView
+                    android:id="@+id/wcvCalendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/week_calendar_height"
+                    android:background="@color/calendar_bg_color"
+                    android:overScrollMode="never"
+                    android:visibility="gone"
+                    app:week_day_text_size="@integer/calendar_text_size"
+                    app:week_holiday_color="@color/holiday_text_color"
+                    app:week_selected_circle_color="@color/select_circle_color"
+                    app:week_show_holiday_hint="true"
+                    app:week_show_lunar="true"
+                    app:week_show_task_hint="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlScheduleList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackground">
+
+                <com.momochen.customweekmonthcalendar.calendar.schedule.ScheduleRecyclerView
+                    android:id="@+id/rvScheduleList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    android:paddingTop="6dp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </com.momochen.customweekmonthcalendar.calendar.schedule.ScheduleLayout>
 
 </LinearLayout>

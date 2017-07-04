@@ -2,7 +2,6 @@ package com.momochen.customweekmonthcalendar.calendar.month;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,14 +18,13 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Jimmy on 2016/10/6 0006.
+ * Created by momochen on 2017/7/4.
  */
 public class MonthView extends View {
 
     private static final int NUM_COLUMNS = 7;
     private static final int NUM_ROWS = 6;
     private Paint mPaint;
-    private Paint mLunarPaint;
     private int mNormalDayColor;
     private int mSelectDayColor;
     private int mSelectBGColor;
@@ -34,7 +32,6 @@ public class MonthView extends View {
     private int mCurrentDayColor;
     private int mHintCircleColor;
     private int mLunarTextColor;
-    private int mHolidayTextColor;
     private int mLastOrNextMonthTextColor;
     private int mCurrYear, mCurrMonth, mCurrDay;
     private int mSelYear, mSelMonth, mSelDay;
@@ -44,15 +41,11 @@ public class MonthView extends View {
     private int mWeekRow; // 当前月份第几周
     private int mCircleRadius = 6;
     private int[][] mDaysText;
-    private int[] mHolidays;
     private String[][] mHolidayOrLunarText;
-    private boolean mIsShowLunar;
     private boolean mIsShowHint;
-    private boolean mIsShowHolidayHint;
     private DisplayMetrics mDisplayMetrics;
     private OnMonthClickListener mDateClickListener;
     private GestureDetector mGestureDetector;
-    private Bitmap mRestBitmap, mWorkBitmap;
 
     public MonthView(Context context, int year, int month) {
         this(context, null, year, month);
@@ -108,12 +101,12 @@ public class MonthView extends View {
             mHintCircleColor = array.getColor(R.styleable.MonthCalendarView_month_hint_circle_color, Color.parseColor("#FE8595"));
             mLastOrNextMonthTextColor = array.getColor(R.styleable.MonthCalendarView_month_last_or_next_month_text_color, Color.parseColor("#ACA9BC"));
             mLunarTextColor = array.getColor(R.styleable.MonthCalendarView_month_lunar_text_color, Color.parseColor("#ACA9BC"));
-            mHolidayTextColor = array.getColor(R.styleable.MonthCalendarView_month_holiday_color, Color.parseColor("#A68BFF"));
+//            mHolidayTextColor = array.getColor(R.styleable.MonthCalendarView_month_holiday_color, Color.parseColor("#A68BFF"));
             mDaySize = array.getInteger(R.styleable.MonthCalendarView_month_day_text_size, 13);
             mLunarTextSize = array.getInteger(R.styleable.MonthCalendarView_month_day_lunar_text_size, 8);
             mIsShowHint = array.getBoolean(R.styleable.MonthCalendarView_month_show_task_hint, true);
-            mIsShowLunar = array.getBoolean(R.styleable.MonthCalendarView_month_show_lunar, true);
-            mIsShowHolidayHint = array.getBoolean(R.styleable.MonthCalendarView_month_show_holiday_hint, true);
+//            mIsShowLunar = array.getBoolean(R.styleable.MonthCalendarView_month_show_lunar, true);
+//            mIsShowHolidayHint = array.getBoolean(R.styleable.MonthCalendarView_month_show_holiday_hint, true);
         } else {
             mSelectDayColor = Color.parseColor("#FFFFFF");
             mSelectBGColor = Color.parseColor("#E8E8E8");
@@ -122,12 +115,12 @@ public class MonthView extends View {
             mCurrentDayColor = Color.parseColor("#FF8594");
             mHintCircleColor = Color.parseColor("#FE8595");
             mLastOrNextMonthTextColor = Color.parseColor("#ACA9BC");
-            mHolidayTextColor = Color.parseColor("#A68BFF");
+//            mHolidayTextColor = Color.parseColor("#A68BFF");
             mDaySize = 13;
             mLunarTextSize = 8;
             mIsShowHint = true;
-            mIsShowLunar = true;
-            mIsShowHolidayHint = true;
+//            mIsShowLunar = true;
+//            mIsShowHolidayHint = true;
         }
         mSelYear = year;
         mSelMonth = month;
@@ -140,10 +133,10 @@ public class MonthView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setTextSize(mDaySize * mDisplayMetrics.scaledDensity);
 
-        mLunarPaint = new Paint();
-        mLunarPaint.setAntiAlias(true);
-        mLunarPaint.setTextSize(mLunarTextSize * mDisplayMetrics.scaledDensity);
-        mLunarPaint.setColor(mLunarTextColor);
+//        mLunarPaint = new Paint();
+//        mLunarPaint.setAntiAlias(true);
+//        mLunarPaint.setTextSize(mLunarTextSize * mDisplayMetrics.scaledDensity);
+//        mLunarPaint.setColor(mLunarTextColor);
     }
 
     private void initMonth() {
@@ -151,9 +144,10 @@ public class MonthView extends View {
         mCurrYear = calendar.get(Calendar.YEAR);
         mCurrMonth = calendar.get(Calendar.MONTH);
         mCurrDay = calendar.get(Calendar.DATE);
+        //当前有选中的日期  设置当前选中的日期
         if (mSelYear == mCurrYear && mSelMonth == mCurrMonth) {
             setSelectYearMonth(mSelYear, mSelMonth, mCurrDay);
-        } else {
+        } else {//没有  默认第一天
             setSelectYearMonth(mSelYear, mSelMonth, 1);
         }
     }
@@ -177,9 +171,9 @@ public class MonthView extends View {
     protected void onDraw(Canvas canvas) {
         initSize();
         clearData();
-        drawLastMonth(canvas);
+//        drawLastMonth(canvas);
         int selected[] = drawThisMonth(canvas);
-        drawNextMonth(canvas);
+//        drawNextMonth(canvas);
         drawHintCircle(canvas);
     }
 
@@ -192,11 +186,19 @@ public class MonthView extends View {
         }
     }
 
+    /**
+     * 清除日历所有数据
+     */
     private void clearData() {
         mDaysText = new int[6][7];
         mHolidayOrLunarText = new String[6][7];
     }
 
+    /**
+     * 绘制上月数据
+     *
+     * @param canvas
+     */
     private void drawLastMonth(Canvas canvas) {
         int lastYear, lastMonth;
         if (mSelMonth == 0) {
@@ -219,6 +221,12 @@ public class MonthView extends View {
         }
     }
 
+    /**
+     * 绘制当月数据
+     *
+     * @param canvas
+     * @return 返回当前选中的坐标
+     */
     private int[] drawThisMonth(Canvas canvas) {
         String dayString;
         int selectedPoint[] = new int[2];
@@ -259,6 +267,11 @@ public class MonthView extends View {
         return selectedPoint;
     }
 
+    /**
+     * 绘制下月数据
+     *
+     * @param canvas
+     */
     private void drawNextMonth(Canvas canvas) {
         mPaint.setColor(mLastOrNextMonthTextColor);
         int monthDays = CalendarUtils.getMonthDays(mSelYear, mSelMonth);
@@ -311,21 +324,29 @@ public class MonthView extends View {
     }
 
     @Override
-    public boolean performClick() {
-        return super.performClick();
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mGestureDetector.onTouchEvent(event);
     }
 
+    /**
+     * 设置当前选中的日期
+     *
+     * @param year
+     * @param month
+     * @param day
+     */
     public void setSelectYearMonth(int year, int month, int day) {
         mSelYear = year;
         mSelMonth = month;
         mSelDay = day;
     }
 
+    /**
+     * 日历点击事件处理
+     *
+     * @param x
+     * @param y
+     */
     private void doClickAction(int x, int y) {
         if (y > getHeight())
             return;
