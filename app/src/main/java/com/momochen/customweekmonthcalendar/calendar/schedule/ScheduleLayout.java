@@ -41,14 +41,14 @@ public class ScheduleLayout extends FrameLayout {
     private int mCurrentSelectYear;//当前选中的  年
     private int mCurrentSelectMonth;//当前选中的  月
     private int mCurrentSelectDay;//当前选中的  日
-    private int mRowSize;
+    private int mRowSize;//日历行高
     private int mMinDistance;
     private int mAutoScrollDistance;
-    private int mDefaultView;
+    private int mDefaultView;//首次默认视图
     private float mDownPosition[] = new float[2];
     private boolean mIsScrolling = false;//当前是否在滚动
     private boolean mIsAutoChangeMonthRow;//日历布局有时6行、有时5行  是否自动根据行数改变布局高度
-    private boolean mCurrentRowsIsSix = true;
+    private boolean mCurrentRowsIsSix = true;//当前是否是有6行  mIsAutoChangeMonthRow为true  功能才有效果个
 
     private ScheduleState mState;
     private OnCalendarClickListener mOnCalendarClickListener;
@@ -70,19 +70,27 @@ public class ScheduleLayout extends FrameLayout {
     }
 
     private void initAttrs(TypedArray array) {
+        //首次默认视图  默认值月视图
         mDefaultView = array.getInt(R.styleable.ScheduleLayout_default_view, DEFAULT_MONTH);
+        //是否自动根据行数改变布局高度  默认false
         mIsAutoChangeMonthRow = array.getBoolean(R.styleable.ScheduleLayout_auto_change_month_row, false);
         array.recycle();
-        mState = ScheduleState.OPEN;
+//        mState = ScheduleState.OPEN;
         mRowSize = getResources().getDimensionPixelSize(R.dimen.week_calendar_height);
         mMinDistance = getResources().getDimensionPixelSize(R.dimen.calendar_min_distance);
         mAutoScrollDistance = getResources().getDimensionPixelSize(R.dimen.auto_scroll_distance);
     }
 
+    /**
+     * 初始化手势
+     */
     private void initGestureDetector() {
         mGestureDetector = new GestureDetector(getContext(), new OnScheduleScrollListener(this));
     }
 
+    /**
+     * 初始化数据  第一次初始化
+     */
     private void initDate() {
         Calendar calendar = Calendar.getInstance();
         resetCurrentSelectDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -99,6 +107,9 @@ public class ScheduleLayout extends FrameLayout {
         bindingMonthAndWeekCalendar();
     }
 
+    /**
+     * 初始化 周月视图
+     */
     private void bindingMonthAndWeekCalendar() {
         mcvCalendar.setOnCalendarClickListener(mMonthCalendarClickListener);
         wcvCalendar.setOnCalendarClickListener(mWeekCalendarClickListener);
@@ -107,22 +118,33 @@ public class ScheduleLayout extends FrameLayout {
         if (mIsAutoChangeMonthRow) {
             mCurrentRowsIsSix = CalendarUtils.getMonthRows(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)) == 6;
         }
-        //
+        //默认月视图  初始化
         if (mDefaultView == DEFAULT_MONTH) {
+            //隐藏周视图
             wcvCalendar.setVisibility(INVISIBLE);
+            //状态  开启
             mState = ScheduleState.OPEN;
             if (!mCurrentRowsIsSix) {
                 rlScheduleList.setY(rlScheduleList.getY() - mRowSize);
             }
+            //默认周视图  初始化
         } else if (mDefaultView == DEFAULT_WEEK) {
+            //隐藏月视图
             wcvCalendar.setVisibility(VISIBLE);
+            //状态  关闭
             mState = ScheduleState.CLOSE;
+            //获取当前日期所在的周  在第几行
             int row = CalendarUtils.getWeekRow(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            //月视图定位到当前日期所在的行
             rlMonthCalendar.setY(-row * mRowSize);
+            //滚动布局  向上滚动（其实就是滚动到顶部  只显示一行）
             rlScheduleList.setY(rlScheduleList.getY() - 5 * mRowSize);
         }
     }
 
+    /**
+     * 设置当前选中的日期
+     */
     private void resetCurrentSelectDate(int year, int month, int day) {
         mCurrentSelectYear = year;
         mCurrentSelectMonth = month;
@@ -225,11 +247,15 @@ public class ScheduleLayout extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
+        //设置 底部列表 高度
         resetViewHeight(rlScheduleList, height - mRowSize);
         resetViewHeight(this, height);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    /**
+     * 设置  视图高度
+     */
     private void resetViewHeight(View view, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams.height != height) {
@@ -306,7 +332,10 @@ public class ScheduleLayout extends FrameLayout {
         }
     }
 
-    private void changeCalendarState() {
+    /**
+     * 切换  日历视图 动画
+     */
+    public void changeCalendarState() {
         if (rlScheduleList.getY() > mRowSize * 2 &&
                 rlScheduleList.getY() < mcvCalendar.getHeight() - mRowSize) { // 位于中间
             ScheduleAnimation animation = new ScheduleAnimation(this, mState, mAutoScrollDistance);
@@ -401,6 +430,9 @@ public class ScheduleLayout extends FrameLayout {
         }
     }
 
+    /**
+     * 切换视图状态
+     */
     private void changeState() {
         if (mState == ScheduleState.OPEN) {
             mState = ScheduleState.CLOSE;
@@ -472,6 +504,7 @@ public class ScheduleLayout extends FrameLayout {
         }
         scheduleY = Math.max(scheduleY, scheduleTop);
         rlScheduleList.setY(scheduleY);
+        rlScheduleList.postInvalidate();
     }
 
     public void setOnCalendarClickListener(OnCalendarClickListener onCalendarClickListener) {
