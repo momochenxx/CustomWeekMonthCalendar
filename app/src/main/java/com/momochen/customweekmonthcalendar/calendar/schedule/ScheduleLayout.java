@@ -504,7 +504,6 @@ public class ScheduleLayout extends FrameLayout {
         }
         scheduleY = Math.max(scheduleY, scheduleTop);
         rlScheduleList.setY(scheduleY);
-        rlScheduleList.postInvalidate();
     }
 
     public void setOnCalendarClickListener(OnCalendarClickListener onCalendarClickListener) {
