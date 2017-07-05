@@ -171,9 +171,9 @@ public class MonthView extends View {
     protected void onDraw(Canvas canvas) {
         initSize();
         clearData();
-//        drawLastMonth(canvas);
+        drawLastMonth(canvas);
         int selected[] = drawThisMonth(canvas);
-//        drawNextMonth(canvas);
+        drawNextMonth(canvas);
         drawHintCircle(canvas);
     }
 
@@ -363,9 +363,9 @@ public class MonthView extends View {
                     clickYear = mSelYear;
                     clickMonth = mSelMonth - 1;
                 }
-                if (mDateClickListener != null) {
-                    mDateClickListener.onClickLastMonth(clickYear, clickMonth, mDaysText[row][column]);
-                }
+//                if (mDateClickListener != null) {
+//                    mDateClickListener.onClickLastMonth(clickYear, clickMonth, mDaysText[row][column]);
+//                }
             } else {
                 clickThisMonth(clickYear, clickMonth, mDaysText[row][column]);
             }
@@ -381,9 +381,9 @@ public class MonthView extends View {
                     clickYear = mSelYear;
                     clickMonth = mSelMonth + 1;
                 }
-                if (mDateClickListener != null) {
-                    mDateClickListener.onClickNextMonth(clickYear, clickMonth, mDaysText[row][column]);
-                }
+//                if (mDateClickListener != null) {
+//                    mDateClickListener.onClickNextMonth(clickYear, clickMonth, mDaysText[row][column]);
+//                }
             } else {
                 clickThisMonth(clickYear, clickMonth, mDaysText[row][column]);
             }

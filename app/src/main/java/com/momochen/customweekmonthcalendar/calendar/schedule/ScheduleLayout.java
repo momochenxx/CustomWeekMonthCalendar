@@ -249,7 +249,7 @@ public class ScheduleLayout extends FrameLayout {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         //设置 底部列表 高度
         resetViewHeight(rlScheduleList, height - mRowSize);
-        resetViewHeight(this, height);
+//        resetViewHeight(this, height);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
