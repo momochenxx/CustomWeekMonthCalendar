@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_extend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scheduleLayout.changeCalendarState();
+                scheduleLayout.toggleState();
             }
         });
     }

@@ -335,9 +335,9 @@ public class ScheduleLayout extends FrameLayout {
     /**
      * 切换  日历视图 动画
      */
-    public void changeCalendarState() {
+    private void changeCalendarState() {
         if (rlScheduleList.getY() > mRowSize * 2 &&
-                rlScheduleList.getY() < mcvCalendar.getHeight() - mRowSize) { // 位于中间
+                rlScheduleList.getY() < mcvCalendar.getHeight()){// - mRowSize) { // 位于中间
             ScheduleAnimation animation = new ScheduleAnimation(this, mState, mAutoScrollDistance);
             animation.setDuration(300);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -405,6 +405,46 @@ public class ScheduleLayout extends FrameLayout {
             rlScheduleList.startAnimation(animation);
         }
     }
+
+    /**
+     * 切换月历，周历开关
+     */
+    public void toggleState() {
+        if (mState == ScheduleState.CLOSE) {
+            mcvCalendar.setVisibility(VISIBLE);
+            wcvCalendar.setVisibility(INVISIBLE);
+        }
+
+        ScheduleAnimation changeStateAnimation = new ScheduleAnimation(
+                this, mState, mAutoScrollDistance);
+        changeStateAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (mState == ScheduleState.CLOSE) {
+                    mState = ScheduleState.OPEN;
+//                    setmState(ScheduleState.OPEN);
+                } else {
+                    if (mState == ScheduleState.OPEN) {
+                        changeState();
+                    } else {
+                        resetCalendar();
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        rlScheduleList.startAnimation(changeStateAnimation);
+        resetScrollingState();
+    }
+
 
     private void resetCalendarPosition() {
         if (mState == ScheduleState.OPEN) {
