@@ -67,6 +67,7 @@
                         android:overScrollMode="never"
                         app:month_day_text_size="@integer/calendar_text_size"
                         app:month_holiday_color="@color/holiday_text_color"
+                        app:month_only_month_click="true"
                         app:month_selected_circle_color="@color/select_circle_color"
                         app:month_show_holiday_hint="true"
                         app:month_show_lunar="true"
@@ -103,8 +104,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:orientation="vertical"
-                    android:overScrollMode="never"
-                    android:paddingTop="6dp" />
+                    android:overScrollMode="never" />
             </RelativeLayout>
 
         </LinearLayout>

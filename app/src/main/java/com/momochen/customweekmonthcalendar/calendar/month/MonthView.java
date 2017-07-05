@@ -43,6 +43,8 @@ public class MonthView extends View {
     private int[][] mDaysText;
     private String[][] mHolidayOrLunarText;
     private boolean mIsShowHint;
+    private boolean onlyMonthClick;//只有当月可点击
+
     private DisplayMetrics mDisplayMetrics;
     private OnMonthClickListener mDateClickListener;
     private GestureDetector mGestureDetector;
@@ -107,6 +109,8 @@ public class MonthView extends View {
             mIsShowHint = array.getBoolean(R.styleable.MonthCalendarView_month_show_task_hint, true);
 //            mIsShowLunar = array.getBoolean(R.styleable.MonthCalendarView_month_show_lunar, true);
 //            mIsShowHolidayHint = array.getBoolean(R.styleable.MonthCalendarView_month_show_holiday_hint, true);
+
+            onlyMonthClick = array.getBoolean(R.styleable.MonthCalendarView_month_only_month_click, false);
         } else {
             mSelectDayColor = Color.parseColor("#FFFFFF");
             mSelectBGColor = Color.parseColor("#E8E8E8");
@@ -121,6 +125,7 @@ public class MonthView extends View {
             mIsShowHint = true;
 //            mIsShowLunar = true;
 //            mIsShowHolidayHint = true;
+            onlyMonthClick = false;
         }
         mSelYear = year;
         mSelMonth = month;
@@ -363,9 +368,9 @@ public class MonthView extends View {
                     clickYear = mSelYear;
                     clickMonth = mSelMonth - 1;
                 }
-//                if (mDateClickListener != null) {
-//                    mDateClickListener.onClickLastMonth(clickYear, clickMonth, mDaysText[row][column]);
-//                }
+                if (!onlyMonthClick && mDateClickListener != null) {
+                    mDateClickListener.onClickLastMonth(clickYear, clickMonth, mDaysText[row][column]);
+                }
             } else {
                 clickThisMonth(clickYear, clickMonth, mDaysText[row][column]);
             }
@@ -381,9 +386,9 @@ public class MonthView extends View {
                     clickYear = mSelYear;
                     clickMonth = mSelMonth + 1;
                 }
-//                if (mDateClickListener != null) {
-//                    mDateClickListener.onClickNextMonth(clickYear, clickMonth, mDaysText[row][column]);
-//                }
+                if (!onlyMonthClick && mDateClickListener != null) {
+                    mDateClickListener.onClickNextMonth(clickYear, clickMonth, mDaysText[row][column]);
+                }
             } else {
                 clickThisMonth(clickYear, clickMonth, mDaysText[row][column]);
             }

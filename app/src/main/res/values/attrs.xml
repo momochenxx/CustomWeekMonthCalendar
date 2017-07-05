@@ -22,6 +22,7 @@
         <attr name="month_show_lunar" format="boolean"/>
         <attr name="month_show_holiday_hint" format="boolean"/>
         <attr name="month_count" format="integer"/>
+        <attr name="month_only_month_click" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="WeekCalendarView">
